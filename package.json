@@ -1,0 +1,22 @@
+{
+  "name": "myserver",
+  "version": "1.0.0",
+  "description": "test myserver",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/September09/myServer.git"
+  },
+  "keywords": [
+    "server"
+  ],
+  "author": "September",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/September09/myServer/issues"
+  },
+  "homepage": "https://github.com/September09/myServer#readme"
+}
