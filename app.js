@@ -3,8 +3,14 @@
  */
 
 const Koa = require('koa');
-
+const mongoose = require('mongoose');
+const config = require('./config');
+const convert = require('koa-convert');
+const koaLogger = require('koa-logger');
 const app = new Koa();
+
+// 配置控制台日志中间件
+app.use(convert(koaLogger()));
 
 const koaBody = require('koa-body')({
     multipart: true,    //支持 multipart/form-data
@@ -39,7 +45,8 @@ app.use(koaBody);
 
 app.use(controller());
 
+mongoose.Promise = global.Promise;
+mongoose.connect(config.database);
 
 app.listen(9091);
-
 console.log('app started at port 9091...');
