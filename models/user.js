@@ -19,7 +19,14 @@ const UserSchema = new Schema({
     password: {
         type: String,
         require: true
-    }
+    },
+    accessToken: String,
+    id: Number,
+    create_time: String
 });
 
-module.exports = mongoose.model('User', UserSchema);
+UserSchema.index({id: 1});
+
+const User = mongoose.model('User', UserSchema);
+
+module.exports = User;
