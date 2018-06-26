@@ -10,6 +10,8 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
+const bcrypt = require('bcrypt');
+
 const UserSchema = new Schema({
     userName: {
         type: String,
@@ -26,6 +28,32 @@ const UserSchema = new Schema({
 });
 
 UserSchema.index({id: 1});
+
+// 针对用户密码进行加密处理
+UserSchema.pre('save', (next) => {
+    const user = this;
+    if (this.isModified('password') || this.isNew) {
+        bcrypt.genSalt(10, (err, salt) => {
+            if (err) return next(err);
+            bcrypt.hash(user.password, salt, (err, hash) => {
+                if (err) return next(err);
+                user.password = hash;
+                next();
+            })
+        })
+    } else {
+        return next();
+    }
+})
+
+// 检验用户输入密码是否正确
+UserSchema.methods.comparePassword = function(pwd, cb) {
+    bcrypt.compare(pwd, this.password, (err, isMatch) => {
+        if (err) return cb(err);
+        cb(null, isMatch);
+    })
+}
+
 
 const User = mongoose.model('User', UserSchema);
 

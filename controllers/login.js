@@ -32,17 +32,12 @@ async function login(ctx) {
         } else {
             //判断密码是否正确
             if (password === user.password) {
-                ctx.response.body = {success: 0, message: 'login success!'}
+                ctx.response.body = {status: 0, message: 'login success!'}
             } else {
-                ctx.response.body = {success: 1, message: 'login error!'}
+                ctx.response.body = {status: 1, message: 'login error!'}
             }
         }
     })
-
-    // ctx.response.body = {
-    //     status: 0,
-    //     msg: 'login success!',
-    // };
 }
 
 
