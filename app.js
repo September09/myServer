@@ -7,12 +7,10 @@ const app = new Koa();
 const mongoose = require('mongoose');
 const convert = require('koa-convert');
 const koaLogger = require('koa-logger');
-// const morgan = require('morgan'); // 命令行log显示
 const passport = require('koa-passport');// 用户认证模块passport
-// const Strategy = require('passport-http-bearer').Strategy;// token验证模块
-const LocalStrategy = require('passport-local')
-const session = require("koa-session2")
-const config = require('./config');
+const logger = require('koa-logger');
+// const loggers = require('./middleware/loggers');
+const config = require('./config/config');
 
 // 配置控制台日志中间件
 app.use(convert(koaLogger()));
@@ -43,11 +41,15 @@ app.use(async (ctx, next) => {
 
 //parse request body
 app.use(koaBody);
-
+// app.use(convert(loggers()));
 app.use(controller());
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database);
+
+app.on('error', function(err, ctx){
+    log.error('server error', err, ctx);
+});
 
 app.listen(9091);
 console.log('app started at port 9091...');

@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const User = require('./../models/user');
 const jwt = require('jsonwebtoken');
-const config = require('../config');
+const config = require('../config/config');
 /**
  * login
  * @param ctx
@@ -28,7 +28,7 @@ async function login(ctx) {
         ctx.response.body = result;
     } else {
         //判断密码是否正确
-         user.comparePassword(password, (err, isMatch) => {
+         return user.comparePassword(password, (err, isMatch) => {
              if (isMatch && !err) {
                 const token = jwt.sign({userName: user.userName}, config.secret, {expiresIn: 10080});
                 user.token = token;

@@ -6,7 +6,7 @@ const passport = require('koa-passport');
 const LocalStrategy = require('passport-local')
 
 const User = require('./models/user');
-const config = require('./config');
+const config = require('./config/config');
 
 /**
  * token 验证
