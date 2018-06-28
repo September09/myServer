@@ -20,22 +20,29 @@ async function register(ctx) {
 
     // 从请求体中获得参数
     const { userName, password } = ctx.request.body;
+    // 查询数据库中是否有当前用户
     const user = await User.findOne({userName});
-
     if (!user) {
-        const user = new User({
-            userName: userName,
-            password: password,
-            create_time: dtime().format('YYYY-MM-DD HH:mm'),
-        })
-        const doc = await user.save();
-        if (!doc.errors) {
-            ctx.response.body = {status: 0, msg: 'register success'}
+        if (!userName || !password) {
+            ctx.response.body = {
+                status: 1,
+                msg: "please input your username & password"
+            }
         } else {
-            ctx.response.body = {status: 1, msg: 'register err'}
+            const newUser = new User({
+                userName: userName,
+                password: password,
+                create_time: dtime().format('YYYY-MM-DD HH:mm'),
+            });
+            const doc = await newUser.save();
+            if (!doc.errors) {
+                ctx.response.body = {status: 0, msg: 'register success'}
+            } else {
+                ctx.response.body = {status: 1, msg: 'register err'}
+            }
         }
     } else {
-        ctx.response.body = result
+        ctx.response.body = result;
     }
 
 }

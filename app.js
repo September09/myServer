@@ -3,15 +3,22 @@
  */
 
 const Koa = require('koa');
+const app = new Koa();
 const mongoose = require('mongoose');
-const config = require('./config');
 const convert = require('koa-convert');
 const koaLogger = require('koa-logger');
-const app = new Koa();
+// const morgan = require('morgan'); // 命令行log显示
+const passport = require('koa-passport');// 用户认证模块passport
+// const Strategy = require('passport-http-bearer').Strategy;// token验证模块
+const LocalStrategy = require('passport-local')
+const session = require("koa-session2")
+const config = require('./config');
 
 // 配置控制台日志中间件
 app.use(convert(koaLogger()));
-
+app.use(passport.initialize());// 初始化passport模块
+app.use(passport.session())
+// app.use(morgan('dev'));// 命令行中显示程序运行日志,便于bug调试
 const koaBody = require('koa-body')({
     multipart: true,    //支持 multipart/form-data
     formidable: {   //https://github.com/felixge/node-formidable
@@ -33,12 +40,6 @@ app.use(async (ctx, next) => {
     }
     await next();
 })
-
-
-app.use(async (ctx, next) => {
-    await next();
-    // console.log(`${getCurrentTime()} ${ctx.request.ip} ${ctx.request.method} ${ctx.request.url}`);
-});
 
 //parse request body
 app.use(koaBody);

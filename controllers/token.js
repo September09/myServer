@@ -30,11 +30,12 @@ async function token(ctx) {
     if (!user) {
         ctx.response.body = result
     } else {
-        user.comparePassword(password, (err, isMatch) => {
+        const toCompare = await user.comparePassword(password, compareResult())
+        const compareResult = (err, isMatch) => {
             if (isMatch && !err) {
                 const token = jwt.sign({userName: user.userName}, config.secret, {expiresIn: 10080});
                 user.token = token;
-                user.save(function(err) {
+                user.save(function (err) {
                     if (err) {
                         throw err;
                     }
@@ -50,7 +51,7 @@ async function token(ctx) {
                     msg: 'password is err',
                 }
             }
-        })
+        }
     }
 
 }
