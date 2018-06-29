@@ -11,6 +11,7 @@ const passport = require('koa-passport');// 用户认证模块passport
 const logger = require('koa-logger');
 // const loggers = require('./middleware/loggers');
 const config = require('./config/config');
+import errorHandle from './middleware/errorHandle';
 
 // 配置控制台日志中间件
 app.use(convert(koaLogger()));
@@ -43,13 +44,13 @@ app.use(async (ctx, next) => {
 app.use(koaBody);
 // app.use(convert(loggers()));
 app.use(controller());
-
+// 防止Mongoose: mpromise 错误
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database);
 
-app.on('error', function(err, ctx){
-    log.error('server error', err, ctx);
-});
+// app.on('error', function(err, ctx){
+//     log.error('server error', err, ctx);
+// });
 
 app.listen(9091);
 console.log('app started at port 9091...');

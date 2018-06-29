@@ -40,7 +40,6 @@ const UserSchema = new Schema({
 
 
 // 针对用户密码进行加密处理
-console.log('this',this);
 UserSchema.pre('save', function(next) {
     var user = this;
     console.log('next',next);
@@ -64,12 +63,26 @@ UserSchema.pre('save', function(next) {
 })
 
 // 检验用户输入密码是否正确
-UserSchema.methods.comparePassword = (pwd, cb) => {
-    bcrypt.compare(pwd, this.password, (err, isMatch) => {
-        if (err) return cb(err);
-        cb(null, isMatch);
-    })
-}
+// UserSchema.methods.comparePassword = async function(pwd, cb) {
+//     console.log('pwd',pwd);
+//     console.log('this.password:',this.password);
+//     await bcrypt.compare(pwd, this.password, (err, isMatch) => {
+//         console.log(333333);
+//         if (err) return cb(err);
+//         cb(null, isMatch);
+//     })
+// }
+
+
+// UserSchema.methods = {
+//     comparePassword:function(pwd,cb){
+//         console.log(pwd);
+//         bcrypt.compare(pwd, '111111', function(err, isMatch){
+//             if(err) return cb(err);
+//             cb(null, isMatch);
+//         })
+//     }
+// }
 
 
 const User = mongoose.model('User', UserSchema);

@@ -30,4 +30,14 @@ module.exports = function(passport) {
             });
         }
     ));
+
+    // serializeUser 在用户登录验证成功以后将会把用户的数据存储到 session 中
+    passport.serializeUser(function (user, done) {
+        done(null, user)
+    })
+
+// deserializeUser 在每次请求的时候将从 session 中读取用户对象
+    passport.deserializeUser(function (user, done) {
+        return done(null, user)
+    })
 };

@@ -30,28 +30,28 @@ async function token(ctx) {
     if (!user) {
         ctx.response.body = result
     } else {
-        const toCompare = await user.comparePassword(password, compareResult())
-        const compareResult = (err, isMatch) => {
-            if (isMatch && !err) {
-                const token = jwt.sign({userName: user.userName}, config.secret, {expiresIn: 10080});
-                user.token = token;
-                user.save(function (err) {
-                    if (err) {
-                        throw err;
-                    }
-                    ctx.response.body = {
-                        status: 0,
-                        token: 'token' + token,
-                        userName: user.userName
-                    }
-                })
-            } else {
-                ctx.response.body = {
-                    status: 0,
-                    msg: 'password is err',
-                }
-            }
-        }
+        const toCompare = await user.comparePassword(password)
+        // await function compareResult(err, isMatch) {
+        //     if (isMatch && !err) {
+        //         const token = jwt.sign({userName: user.userName}, config.secret, {expiresIn: 10080});
+        //         user.token = token;
+        //         user.save(function (err) {
+        //             if (err) {
+        //                 throw err;
+        //             }
+        //             ctx.response.body = {
+        //                 status: 0,
+        //                 token: 'token' + token,
+        //                 userName: user.userName
+        //             }
+        //         })
+        //     } else {
+        //         ctx.response.body = {
+        //             status: 0,
+        //             msg: 'password is err',
+        //         }
+        //     }
+        // }
     }
 
 }
