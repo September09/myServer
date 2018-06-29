@@ -7,17 +7,13 @@ const app = new Koa();
 const mongoose = require('mongoose');
 const convert = require('koa-convert');
 const koaLogger = require('koa-logger');
-const passport = require('koa-passport');// 用户认证模块passport
+const passport = require('./passport');// 用户认证模块passport
 const logger = require('koa-logger');
+const session = require('koa-session')
+const RedisStore = require('koa-redis')
 // const loggers = require('./middleware/loggers');
 const config = require('./config/config');
-import errorHandle from './middleware/errorHandle';
 
-// 配置控制台日志中间件
-app.use(convert(koaLogger()));
-app.use(passport.initialize());// 初始化passport模块
-app.use(passport.session())
-// app.use(morgan('dev'));// 命令行中显示程序运行日志,便于bug调试
 const koaBody = require('koa-body')({
     multipart: true,    //支持 multipart/form-data
     formidable: {   //https://github.com/felixge/node-formidable
@@ -43,7 +39,18 @@ app.use(async (ctx, next) => {
 //parse request body
 app.use(koaBody);
 // app.use(convert(loggers()));
+
+app.use(session({
+    cookie: {secure: false, maxAge:86400000},
+    store: RedisStore(redisConf.session)
+}, app))
 app.use(controller());
+app.use(passport.initialize());// 初始化passport模块
+app.use(passport.session())
+
+
+// 配置控制台日志中间件
+app.use(convert(koaLogger()));
 // 防止Mongoose: mpromise 错误
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database);
