@@ -22,6 +22,7 @@ async function login(ctx) {
     }
     // 从请求体中获得参数
     const { userName, password } = ctx.request.body;
+    console.log('body',ctx.request);
     // 判断数据库中是否存在该用户
     const user = await User.findOne({userName});
     // 不存在用户 则提示用户不存在
@@ -32,6 +33,14 @@ async function login(ctx) {
         if (await bcrypt.compare(password, user.password)) {
             const token = jwt.sign({userName: user.userName}, config.secret, {expiresIn: 10080});
             user.token = token;
+            await new Promise((resolve, reject) => {
+                user.save((err) => {
+                    if(err){
+                        reject(err);
+                    }
+                    resolve();
+                });
+            });
             ctx.response.body = {status: 0, message: 'login success!', token: 'token ' + token, userName: user.userName}
         } else {
             ctx.response.body = {status: 1, message: 'password error!'}
