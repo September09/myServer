@@ -41,7 +41,7 @@ async function login(ctx) {
                     resolve();
                 });
             });
-            ctx.response.body = {status: 0, message: 'login success!', token: 'token ' + token, userName: user.userName}
+            ctx.response.body = {status: 0, message: 'login success!', token: 'Bearer ' + token, userName: user.userName}
         } else {
             ctx.response.body = {status: 1, message: 'password error!'}
         }

@@ -19,16 +19,8 @@ async function getAllUsers(ctx) {
         msg: 'no users!',
     }
 
-    payload = getJWTPayload(ctx.headers.authorization);
-
-    // 从请求体中获得参数
-    // 查询数据库中是否有当前用户
+    // 查询数据库中所有用户
     const user = await User.find();
-    // console.log(user);
-    console.log('111111',ctx.request.headers);
-    console.log('2222222',ctx.request.url);
-    // payload = jwt.verify(ctx.headers.authorization)
-    //
     if (!user) {
         ctx.response.body = result
 
@@ -41,12 +33,6 @@ async function getAllUsers(ctx) {
         console.log('111111',ctx.request.headers);
     }
 
-}
-
-/* 通过token获取JWT的payload部分 */
-function getJWTPayload(token) {
-    // 验证并解析JWT
-    return jwt.verify(token.split(' ')[1], config.secret);
 }
 
 module.exports = {
